@@ -24,8 +24,8 @@ document.getElementById("playBtn").addEventListener("click", function() {
 
 //round setup / pick answer 
 
-        answer = Math.floor(Math.random() * range) + 1;
-
+    answer = Math.floor(Math.random() * range) + 1;
+    guessCount = 0; //reset guess count for new round
     //Disable and Enable buttons and radio choices
     document.getElementById("msg").textContent = playerName + ", guess a number between 1 and " + range;
     document.getElementById("guess").value="";
@@ -89,14 +89,28 @@ document.getElementById("guessBtn").addEventListener("click", function() {
 function updateScore(score) {
     totalWins ++;
     totalGuesses += score;
-    
+    //score for round and average 
     document.getElementById("wins").textContent = "Total wins: " + totalWins;
     document.getElementById("avgScore").textContent = "Average Score: " + (totalGuesses/totalWins).toFixed(1);
+
+    //update leaderboard 
+    scores.push(score);
+    scores.sort(function(a,b){return a-b;});
+
+    let leaderboard = document.getElementsByName("leaderboard");
+    for (let i=0; i < leaderboard/length; i++) {
+        if (i < scores.length) {
+            leaderboard[i].textContent = scores[i];
+        } else {
+            leaderboard[i].textContent = "--";
+
+        }
+    }
 }
 
 function resetButtons() {
     document.getElementById("guessBtn").disabled = true;
-    document.getElementById("giveUpBtn").disabled = ture;
+    document.getElementById("giveUpBtn").disabled = true;
     document.getElementById("playBtn").disabled = false;
 
     //disable radio level selection 
