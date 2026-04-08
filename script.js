@@ -39,3 +39,69 @@ document.getElementById("playBtn").addEventListener("click", function() {
     }
 
 });
+
+//Guessing 
+document.getElementById("guessBtn").addEventListener("click", function() {
+    let input = document.getElementById("guess").value;
+    let num = parseInt(input);
+    if (isNaN(num)) {
+        document.getElementById("msg").textContent = "Please enter a valid number!";
+        return;
+    }
+    guessCount ++;
+    let diff = Math.abs(num-answer);
+
+    //correct 
+
+    if(num === answer){
+        document.getElementById("msg").textContent = "Correct! " + playerName + " got it in " + guessCount + " guesses!";
+        updateScore(guessCount);
+        resetButtons(); //stop guess & give up restart play
+    }
+    //higher
+    else if (num > answer) {
+        let temp = "";
+        if (diff <= 2) {
+            temp = "Hot!";
+        } else if (diff <= 5) {
+            temp = "Warm!";
+        } else {
+            temp = "Cold";
+        }
+        document.getElementById("msg").textContent = "Too high. " + temp;
+    }
+    //lower
+    else {
+        let temp = "";
+        if (diff <= 2) {
+            temp = "Hot!";
+        } else if (diff <= 5) {
+            temp = "Warm!";
+        } else {
+            temp = "Cold";
+        }
+        document.getElementById("msg").textContent = "Too low. " + temp;
+    }
+})
+
+//update score when win 
+
+function updateScore(score) {
+    totalWins ++;
+    totalGuesses += score;
+    
+    document.getElementById("wins").textContent = "Total wins: " + totalWins;
+    document.getElementById("avgScore").textContent = "Average Score: " + (totalGuesses/totalWins).toFixed(1);
+}
+
+function resetButtons() {
+    document.getElementById("guessBtn").disabled = true;
+    document.getElementById("giveUpBtn").disabled = ture;
+    document.getElementById("playBtn").disabled = false;
+
+    //disable radio level selection 
+    let radios = document.getElementsByName("level");
+    for (let i=0; i < radios.length; i++) {
+        radios[i].disabled = false;
+    }
+}
