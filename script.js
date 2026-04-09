@@ -11,6 +11,29 @@ let scores = 0;
 let playerName = prompt("Enter your name:");
 //***Remember to check name and change capitalizations and stuff */
 
+function titleCase(playerName) {
+  let first = word.charAt(0).toUpperCase();
+  let rest = word.slice(1).toLowerCase();
+  let playerName = first + rest;
+}
+
+//date 
+
+let now = new Date();
+let month = now.getMonth() + 1;  // Add 1 because months start at 0
+let day = now.getDate();
+let year = now.getFullYear();
+alert(month + "/" + day + "/" + year);  // e.g. "4/7/2026"
+
+//timer 
+
+let seconds = 0;
+
+let timer = setInterval(function() {
+  seconds++;
+  document.getElementById("clock").innerHTML = seconds + "s";
+}, 1000);  // Runs every 1000 milliseconds (1 second)
+
 //Play
 //get level
 document.getElementById("playBtn").addEventListener("click", function() {
@@ -48,6 +71,7 @@ document.getElementById("guessBtn").addEventListener("click", function() {
         document.getElementById("msg").textContent = "Please enter a valid number!";
         return;
     }
+
     guessCount ++;
     let diff = Math.abs(num-answer);
 
@@ -119,3 +143,4 @@ function resetButtons() {
         radios[i].disabled = false;
     }
 }
+
