@@ -31,7 +31,7 @@ playerName = titleCase(playerName);
 //date 
 
 function time() {
-    let now = newDate();
+    let now = new Date();
     let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
     ];
     let month = months[now.getMonth()];
@@ -150,7 +150,7 @@ function updateScore(score) {
     totalGuesses += score;
     //score for round and average 
     document.getElementById("wins").textContent = "Total wins: " + totalWins;
-    document.getElementById("avgScore").textContent = "Average Score: " + (totalGuesses/totalWins).toFixed(1);
+    document.getElementById("avgScore").textContent = "Average Score: " + Math.round(totalGuesses / totalWins);
 
     //update leaderboard 
     scores.push(score);
