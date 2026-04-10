@@ -7,6 +7,8 @@ let totalWins = 0;
 let totalGuesses = 0;
 let scores = [];
 
+let startMs = 0;
+let times = [];
 
 //Player Name
 let playerName = prompt("Enter your name:");
@@ -22,11 +24,28 @@ playerName = titleCase(playerName);
 
 //date 
 
-let now = new Date();
-let month = now.getMonth() + 1;  // Add 1 because months start at 0
-let day = now.getDate();
-let year = now.getFullYear();
-alert(month + "/" + day + "/" + year);  // e.g. "4/7/2026"
+function time() {
+    let now = new Date();
+    let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
+    ];
+    let month = months[now.getMonth()];
+    let day = now.getDate();
+    let year = now.getFullYear();
+
+    let suffix = "th";
+    if(day % 10 == 1 && day != 11) suffix = "st";
+    else if (day % 10 ==2 && day != 12) suffix = "nd";
+    else if (day % 10 == 3 && day != 13) suffix = "rd";
+
+    let h = now.getHours();
+    let m = now.getMinutes();
+    let s = now.getSeconds();
+
+    if (m < 10) m = "0" + m;
+    if (s < 10) s = "0" + s;
+
+    return month + " " + day + suffix + ", " + year + " " + h + ":" + m + ":" + s;
+}
 
 //timer or clock
 
@@ -34,9 +53,15 @@ setInterval(function(){
   document.getElementById("date").textContent = time();
 },1000);
 
+
+//moved event listeners all here to see better 
+
+document.getElementById("playBtn").addEventListener("click", play);
+document.getElementById("guessBtn").addEventListener("click", makeGuess);
+document.getElementById("giveUpBtn").addEventListener("click", giveUp);
+
 //Play
 //get level
-document.getElementById("playBtn").addEventListener("click", play);
 
 function play() {
     let radios = document.getElementsByName("level");
@@ -51,6 +76,7 @@ function play() {
 
     answer = Math.floor(Math.random() * range) + 1;
     guessCount = 0; //reset guess count for new round
+    startMs = new Date().getTime();
 
 
     //Disable and Enable buttons and radio choices
@@ -65,10 +91,9 @@ function play() {
         radios[i].disabled = true;
     }
 
-};
+}
 
 //Guessing 
-document.getElementById("guessBtn").addEventListener("click", makeGuess);
 
 function makeGuess() {
     let input = document.getElementById("guess").value;
@@ -79,37 +104,34 @@ function makeGuess() {
     }
 
     guessCount ++;
-    let diff = Math.abs(num-answer);
+    let diff = Math.abs(num - answer);
 
     //correct 
 
     if(num === answer){
         document.getElementById("msg").textContent = "Correct! " + playerName + " got it in " + guessCount + " guesses!";
         updateScore(guessCount);
+        updateTimers(newDate().getTime());
         reset(); //stop guess & give up restart play
     }
     //higher
     else if (num > answer) {
-        let temp = "";
+        let temp = "cold";
         if (diff <= 2) {
-            temp = "Hot!";
+            temp = "hot";
         } else if (diff <= 5) {
-            temp = "Warm!";
-        } else {
-            temp = "Cold";
+            temp = "warm";
         }
         document.getElementById("msg").textContent = "Too high. " + temp;
     }
     //lower
     else {
-        let temp = "";
+        let temp = "cold";
         if (diff <= 2) {
-            temp = "Hot!";
+            temp = "hot";
         } else if (diff <= 5) {
-            temp = "Warm!";
-        } else {
-            temp = "Cold";
-        }
+            temp = "warm";
+        } 
         document.getElementById("msg").textContent = "Too low. " + temp;
     }
 }
@@ -138,14 +160,51 @@ function updateScore(score) {
     }
 }
 
-function resetButtons() {
+//timer 
+
+function updateTimers(endMs) {
+    let roundTime = (endMs - startMs)/1000;
+
+    times.push(roundTime);
+
+    let fastest = Math.min(...times);
+    let total = 0;
+    for (let i = 0; i < times.length; i++) {
+    total += times[i];
+  }
+
+  let avg = total/times.length;
+
+  document.getElementById("fastest").textContent = "Fastest Game: " + fastest.toFixed(1);
+  document.getElementById("avgTime").textContent = "Average Time: " + avg.toFixed(1);
+}
+
+//giving up
+function giveUp() {
+    let radios = document.getElementsByName("level");
+    let range = 3;
+
+    for (let i = 0; i < radios.length; i++) {
+        if (radios[i].checked) {
+            range = parseInt(radios[i].value);
+        }
+    }
+
+    document.getElementById("msg").textContent = playerName + " gave up. The answer was: " + answer;
+
+    updateScore(range);
+    updateTimers(new Date().getTime());
+    reset();
+}
+
+function reset() {
     document.getElementById("guessBtn").disabled = true;
     document.getElementById("giveUpBtn").disabled = true;
     document.getElementById("playBtn").disabled = false;
 
     //disable radio level selection 
     let radios = document.getElementsByName("level");
-    for (let i=0; i < radios.length; i++) {
+    for (let i = 0; i < radios.length; i++) {
         radios[i].disabled = false;
     }
 }
