@@ -216,3 +216,32 @@ function reset() {
     }
 }
 
+// above and beyond features:
+
+//press enter to guess
+
+document.getElementById("guess").addEventListener("keydown", function(event) {
+    if (event.key === "Enter") {
+        makeGuess();
+    }
+});
+
+//show guess count 
+
+var guessDisplay = document.createElement("p");
+guessDisplay.id = "guessCount";
+guessDisplay.textContent = "Guesses this round: 0";
+document.body.appendChild(guessDisplay);
+
+document.getElementById("guessCount").textContent = "Guesses this round: " + totalGuesses;
+
+//score feedback
+if (guesses === 1) {
+    document.getElementById("msg").textContent += "Amazing!";
+}
+else if (guesses <= 3) {
+    document.getElementById("msg").textContent += "Great Job!";
+}
+else {
+    document.getElementById("msg").textContent += "Nice work!"
+}
