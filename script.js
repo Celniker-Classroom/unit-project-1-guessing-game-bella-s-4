@@ -14,11 +14,13 @@ let times = [];
 let playerName = prompt("Enter your name:");
 //***Remember to check name and change capitalizations and stuff */
 
-if(!playerNmae) {
+if(!playerName) {
     playerName = "Player";
 }
 
 function titleCase(name) {
+  name = name.trim();
+  
   let first = name.charAt(0).toUpperCase();
   let rest = name.slice(1).toLowerCase();
   return first + rest;
@@ -29,7 +31,7 @@ playerName = titleCase(playerName);
 //date 
 
 function time() {
-    let now = new Date();
+    let now = newDate();
     let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
     ];
     let month = months[now.getMonth()];
@@ -38,7 +40,7 @@ function time() {
 
     let suffix = "th";
     if(day % 10 == 1 && day != 11) suffix = "st";
-    else if (day % 10 ==2 && day != 12) suffix = "nd";
+    else if (day % 10 == 2 && day != 12) suffix = "nd";
     else if (day % 10 == 3 && day != 13) suffix = "rd";
 
     let h = now.getHours();
@@ -105,7 +107,7 @@ function makeGuess() {
     let input = document.getElementById("guess").value;
     let num = parseInt(input);
     if (isNaN(num)) {
-        document.getElementById("msg").textContent = "Please enter a valid number!";
+        document.getElementById("msg").textContent = "enter a valid number";
         return;
     }
 
@@ -115,7 +117,7 @@ function makeGuess() {
     //correct 
 
     if(num === answer){
-        document.getElementById("msg").textContent = "Correct! " + playerName + " got it in " + guessCount + " guesses!";
+        document.getElementById("msg").textContent = "correct! " + playerName + " got it in " + guessCount + " guesses!";
         document.getElementById("guessBtn").disabled = true;
         updateScore(guessCount);
         updateTimers(new Date().getTime());
@@ -124,13 +126,11 @@ function makeGuess() {
     //higher
     else if (num > answer) {
         let temp = "cold";
-        if (diff <= 2) {
-            temp = "hot";
-        } else if (diff <= 5) {
-            temp = "warm";
-        }
-        document.getElementById("msg").textContent = "Too high. " + temp;
+        if (diff <= 2) temp = "hot";
+        else if (diff <= 5) temp = "warm";
+        document.getElementById("msg").textContent = "too high. " + temp;
     }
+
     //lower
     else {
         let temp = "cold";
@@ -139,14 +139,14 @@ function makeGuess() {
         } else if (diff <= 5) {
             temp = "warm";
         } 
-        document.getElementById("msg").textContent = "Too low. " + temp;
+        document.getElementById("msg").textContent = "too low. " + temp;
     }
 }
 
 //update score when win 
 
 function updateScore(score) {
-    totalWins ++;
+    totalWins++;
     totalGuesses += score;
     //score for round and average 
     document.getElementById("wins").textContent = "Total wins: " + totalWins;
@@ -177,13 +177,13 @@ function updateTimers(endMs) {
     let fastest = Math.min(...times);
     let total = 0;
     for (let i = 0; i < times.length; i++) {
-    total += times[i];
-  }
+        total += times[i];
+    }
 
-  let avg = total/times.length;
+    let avg = total / times.length;
 
-  document.getElementById("fastest").textContent = "Fastest Game: " + fastest.toFixed(1);
-  document.getElementById("avgTime").textContent = "Average Time: " + avg.toFixed(1);
+    document.getElementById("fastest").textContent = "Fastest Game: " + fastest.toFixed(1);
+    document.getElementById("avgTime").textContent = "Average Time: " + avg.toFixed(1);
 }
 
 //giving up
@@ -197,7 +197,7 @@ function giveUp() {
         }
     }
 
-    document.getElementById("msg").textContent = playerName + " gave up. The answer was: " + answer;
+    document.getElementById("msg").textContent = playerName + " gave up. The answer was " + answer;
 
     updateScore(range);
     updateTimers(new Date().getTime());
