@@ -14,6 +14,10 @@ let times = [];
 let playerName = prompt("Enter your name:");
 //***Remember to check name and change capitalizations and stuff */
 
+if(!playerNmae) {
+    playerName = "Player";
+}
+
 function titleCase(name) {
   let first = name.charAt(0).toUpperCase();
   let rest = name.slice(1).toLowerCase();
@@ -46,6 +50,8 @@ function time() {
 
     return month + " " + day + suffix + ", " + year + " " + h + ":" + m + ":" + s;
 }
+
+document.getElementById("date").textContent = time();
 
 //timer or clock
 
@@ -110,8 +116,9 @@ function makeGuess() {
 
     if(num === answer){
         document.getElementById("msg").textContent = "Correct! " + playerName + " got it in " + guessCount + " guesses!";
+        document.getElementById("guessBtn").disabled = true;
         updateScore(guessCount);
-        updateTimers(newDate().getTime());
+        updateTimers(new Date().getTime());
         reset(); //stop guess & give up restart play
     }
     //higher
